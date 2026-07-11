@@ -1,0 +1,14 @@
+[Unit]
+Description=Car Model Explorer Webapp
+After=network-online.target
+
+[Container]
+# The container image to run (adjust repository name if pushing to Docker Hub or Quay.io)
+Image=localhost/carmodel-webapp:latest
+PublishPort=8080:80
+ContainerName=carmodel-webapp
+AutoUpdate=registry
+
+[Install]
+# Allow this service to start automatically on system boot
+WantedBy=multi-user.target default.target
