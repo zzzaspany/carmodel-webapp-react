@@ -238,7 +238,7 @@ export default function RecordDetails({ car, serverUrl, onClose, onDelete }: Rec
                   <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">Dynamic Schema Attributes</h3>
                   <div className="border border-slate-100 rounded-xl overflow-hidden divide-y divide-slate-100 bg-white">
                     {customFields.map(([key, value]) => {
-                      if (["brand", "model", "year", "price", "type", "description", "image", "photo"].includes(key)) return null;
+                      if (["brand", "model", "year", "price", "type", "description", "image", "photo", "title", "photos", "pic", "imageUrl"].includes(key)) return null;
                       
                       const displayVal = typeof value === "object" ? JSON.stringify(value) : String(value);
                       return (
