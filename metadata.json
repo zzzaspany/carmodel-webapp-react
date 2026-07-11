@@ -1,0 +1,6 @@
+{
+  "name": "Car Model Explorer",
+  "description": "A clean, modern interface to browse and view carmodel records from a local PocketBase collection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
