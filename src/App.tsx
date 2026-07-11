@@ -14,7 +14,20 @@ import AddRecordModal from "./components/AddRecordModal";
 export default function App() {
   // Read initial configuration from localStorage if available
   const [serverUrl, setServerUrl] = useState(() => {
-    return localStorage.getItem("pb_server_url") || "http://localhost:8090";
+    const saved = localStorage.getItem("pb_server_url");
+    if (saved) return saved;
+
+    // Check if injected by container runtime or defined in window
+    const winUrl = (window as any).POCKETBASE_URL;
+    if (winUrl && winUrl !== "__POCKETBASE_URL__" && winUrl.trim() !== "") {
+      return winUrl;
+    }
+
+    // Check build-time Vite env var fallback
+    const envUrl = import.meta.env.VITE_POCKETBASE_URL;
+    if (envUrl) return envUrl;
+
+    return "http://localhost:8090";
   });
   
   const [viewMode, setViewMode] = useState<"grid" | "table">(() => {

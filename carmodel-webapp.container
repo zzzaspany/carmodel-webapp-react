@@ -8,6 +8,8 @@ Image=ghcr.io/zzzaspany/carmodel-webapp-react:latest
 PublishPort=8080:80
 ContainerName=carmodel-webapp
 AutoUpdate=registry
+# Default environment variable for the PocketBase backend server
+Environment=POCKETBASE_URL=http://localhost:8090
 
 [Install]
 # Allow this service to start automatically on system boot

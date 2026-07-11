@@ -22,4 +22,4 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["sh", "-c", "sed -i \"s|__POCKETBASE_URL__|${POCKETBASE_URL:-http://localhost:8090}|g\" /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"]
