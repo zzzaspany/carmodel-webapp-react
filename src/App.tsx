@@ -15,17 +15,32 @@ export default function App() {
   // Read initial configuration from localStorage if available
   const [serverUrl, setServerUrl] = useState(() => {
     const saved = localStorage.getItem("pb_server_url");
-    if (saved) return saved;
+    if (saved) {
+      if (saved.includes("//pocketbase:") || saved.includes("//pocketbase/") || saved === "http://pocketbase:8090") {
+        return window.location.origin + "/pb";
+      }
+      return saved;
+    }
 
     // Check if injected by container runtime or defined in window
     const winUrl = (window as any).POCKETBASE_URL;
     if (winUrl && winUrl !== "__POCKETBASE_URL__" && winUrl.trim() !== "") {
+      // If the URL is container-internal (like http://pocketbase:8090),
+      // the browser cannot reach it directly. We should use the same-origin proxy path '/pb' instead.
+      if (winUrl.includes("//pocketbase:") || winUrl.includes("//pocketbase/") || winUrl === "http://pocketbase:8090") {
+        return window.location.origin + "/pb";
+      }
       return winUrl;
     }
 
     // Check build-time Vite env var fallback
     const envUrl = import.meta.env.VITE_POCKETBASE_URL;
-    if (envUrl) return envUrl;
+    if (envUrl) {
+      if (envUrl.includes("//pocketbase:") || envUrl.includes("//pocketbase/") || envUrl === "http://pocketbase:8090") {
+        return window.location.origin + "/pb";
+      }
+      return envUrl;
+    }
 
     return "http://localhost:8090";
   });
