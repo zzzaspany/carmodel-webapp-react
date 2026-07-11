@@ -58,37 +58,43 @@ export default function CarTable({ cars, serverUrl, onViewDetails }: CarTablePro
               const price = car.price ? Number(car.price) : null;
               const type = car.type || car.category || "—";
               
-              // Image logic
+              // Image logic with robust array and string handling
               const getImageFilename = () => {
-                if (car.image) return car.image;
-                if (car.photo) return car.photo;
-                if (car.imageUrl) return car.imageUrl;
-                if (car.pic) return car.pic;
-                
-                // Support photos array or photos string
-                if (car.photos) {
-                  if (Array.isArray(car.photos) && car.photos.length > 0) {
-                    return car.photos[0];
+                const resolveField = (val: any): string | null => {
+                  if (!val) return null;
+                  if (Array.isArray(val)) {
+                    return val.length > 0 ? val[0] : null;
                   }
-                  if (typeof car.photos === "string" && car.photos.trim() !== "") {
-                    try {
-                      const parsed = JSON.parse(car.photos);
-                      if (Array.isArray(parsed) && parsed.length > 0) {
-                        return parsed[0];
+                  if (typeof val === "string" && val.trim() !== "") {
+                    if (val.startsWith("[") && val.endsWith("]")) {
+                      try {
+                        const parsed = JSON.parse(val);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                          return parsed[0];
+                        }
+                      } catch (e) {
+                        // ignore
                       }
-                    } catch (e) {
-                      // ignore
                     }
-                    return car.photos;
+                    return val;
                   }
+                  return null;
+                };
+
+                const candidates = [car.image, car.photo, car.imageUrl, car.pic, car.photos];
+                for (const cand of candidates) {
+                  const resolved = resolveField(cand);
+                  if (resolved) return resolved;
                 }
                 return null;
               };
 
               const imageFilename = getImageFilename();
               const hasImage = typeof imageFilename === "string" && imageFilename.trim() !== "" && !imageFilename.startsWith("http");
+              
+              const cleanServerUrl = serverUrl.replace(/\/$/, "");
               const imageUrl = hasImage 
-                ? `${serverUrl}/api/files/${car.collectionId || car.collectionName}/${car.id}/${imageFilename}`
+                ? `${cleanServerUrl}/api/files/${car.collectionId || car.collectionName}/${car.id}/${imageFilename}`
                 : typeof imageFilename === "string" && imageFilename.startsWith("http")
                 ? imageFilename
                 : null;
