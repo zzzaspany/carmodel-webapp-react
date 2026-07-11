@@ -60,17 +60,33 @@ export default function CarTable({ cars, serverUrl, onViewDetails }: CarTablePro
               
               // Image logic with robust array and string handling
               const getImageFilename = () => {
+                const isImageFile = (str: string): boolean => {
+                  if (typeof str !== "string") return false;
+                  const lower = str.toLowerCase();
+                  return (
+                    lower.endsWith(".jpg") ||
+                    lower.endsWith(".jpeg") ||
+                    lower.endsWith(".png") ||
+                    lower.endsWith(".webp") ||
+                    lower.endsWith(".svg") ||
+                    lower.endsWith(".gif")
+                  );
+                };
+
                 const resolveField = (val: any): string | null => {
                   if (!val) return null;
                   if (Array.isArray(val)) {
-                    return val.length > 0 ? val[0] : null;
+                    const first = val.length > 0 ? val[0] : null;
+                    if (first && typeof first === "string") return first;
+                    return null;
                   }
                   if (typeof val === "string" && val.trim() !== "") {
                     if (val.startsWith("[") && val.endsWith("]")) {
                       try {
                         const parsed = JSON.parse(val);
                         if (Array.isArray(parsed) && parsed.length > 0) {
-                          return parsed[0];
+                          const first = parsed[0];
+                          if (first && typeof first === "string") return first;
                         }
                       } catch (e) {
                         // ignore
@@ -81,11 +97,31 @@ export default function CarTable({ cars, serverUrl, onViewDetails }: CarTablePro
                   return null;
                 };
 
+                // 1. Try known fields first
                 const candidates = [car.image, car.photo, car.imageUrl, car.pic, car.photos];
+                for (const cand of candidates) {
+                  const resolved = resolveField(cand);
+                  if (resolved && isImageFile(resolved)) return resolved;
+                }
+
+                // 2. Dynamic scan of all object values for image extensions
+                for (const [key, value] of Object.entries(car)) {
+                  // Skip system metadata keys
+                  if (["id", "collectionId", "collectionName", "created", "updated"].includes(key)) {
+                    continue;
+                  }
+                  const resolved = resolveField(value);
+                  if (resolved && isImageFile(resolved)) {
+                    return resolved;
+                  }
+                }
+
+                // 3. Fallback to any non-null resolved candidate if we couldn't find an image extension specifically
                 for (const cand of candidates) {
                   const resolved = resolveField(cand);
                   if (resolved) return resolved;
                 }
+
                 return null;
               };
 
