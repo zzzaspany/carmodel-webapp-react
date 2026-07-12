@@ -16,10 +16,9 @@ export default function CarTable({ cars, serverUrl, onViewDetails }: CarTablePro
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
               <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 w-20">Preview</th>
-              <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500">Brand / Make</th>
-              <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500">Model Name</th>
-              <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 w-24">Year</th>
-              <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 w-36">Type / Tag</th>
+              <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 w-44">Brand / Make</th>
+              <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 w-48">Model Name</th>
+              <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500">Description</th>
               <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 w-36 text-right">Price</th>
               <th className="py-4 px-5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 w-24 text-center">Action</th>
             </tr>
@@ -54,9 +53,8 @@ export default function CarTable({ cars, serverUrl, onViewDetails }: CarTablePro
               };
 
               const { brand, model } = getBrandAndModel();
-              const year = car.year || new Date(car.created).getFullYear() || "—";
               const price = car.price ? Number(car.price) : null;
-              const type = car.type || car.category || "—";
+              const description = car.description || "";
               
               // Image logic with robust array and string handling
               const getImageFilename = () => {
@@ -164,17 +162,8 @@ export default function CarTable({ cars, serverUrl, onViewDetails }: CarTablePro
                   <td className="py-3 px-5 font-sans font-semibold text-slate-900 text-sm">
                     {model}
                   </td>
-                  <td className="py-3 px-5 font-mono text-xs text-slate-600">
-                    {year}
-                  </td>
-                  <td className="py-3 px-5">
-                    {type !== "—" ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono bg-slate-100 text-slate-700 border border-slate-200/50 uppercase text-[10px]">
-                        {type}
-                      </span>
-                    ) : (
-                      <span className="text-slate-300">—</span>
-                    )}
+                  <td className="py-3 px-5 text-xs text-slate-500 max-w-md truncate" title={description}>
+                    {description || <span className="text-slate-300 italic">No description available</span>}
                   </td>
                   <td className="py-3 px-5 text-right font-mono text-sm font-semibold text-slate-900">
                     {price !== null ? (

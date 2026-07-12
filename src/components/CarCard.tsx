@@ -40,9 +40,7 @@ export default function CarCard({ car, serverUrl, onViewDetails }: CarCardProps)
   };
 
   const { brand, model } = getBrandAndModel();
-  const year = car.year || new Date(car.created).getFullYear() || "—";
   const price = car.price ? Number(car.price) : null;
-  const type = car.type || car.category || "Standard";
   const description = car.description || "";
   
   // Try to find image or photo keys with robust array and string handling
@@ -141,24 +139,18 @@ export default function CarCard({ car, serverUrl, onViewDetails }: CarCardProps)
         <div className="absolute left-1/4 top-1/4 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
         
         <div className="flex justify-between items-start z-10">
-          <span className="text-white/60 font-mono text-[10px] uppercase tracking-wider">
-            {car.id.slice(0, 8)}
+          <span className="text-white/40 font-mono text-[9px] uppercase tracking-wider">
+            Premium Scale Model
           </span>
-          <div className="px-2 py-0.5 bg-white/10 backdrop-blur-md rounded text-white/90 text-[10px] font-mono border border-white/10 uppercase">
-            {type}
-          </div>
         </div>
 
         <div className="flex items-center justify-center z-10 my-2">
-          <Car className="text-white/30 w-16 h-16 stroke-[1.2] group-hover:scale-110 transition-transform duration-300" />
+          <Car className="text-white/20 w-16 h-16 stroke-[1.2] group-hover:scale-110 transition-transform duration-300" />
         </div>
 
         <div className="z-10 flex justify-between items-end">
-          <span className="text-white/80 font-display font-medium text-lg leading-tight truncate max-w-[70%]">
+          <span className="text-white font-display font-medium text-lg leading-tight truncate">
             {brand} <span className="text-white font-semibold">{model}</span>
-          </span>
-          <span className="text-indigo-400 font-mono text-xs font-medium">
-            {year}
           </span>
         </div>
       </div>
@@ -190,24 +182,11 @@ export default function CarCard({ car, serverUrl, onViewDetails }: CarCardProps)
                 e.currentTarget.style.display = 'none';
               }}
             />
-            {/* Dark overlay for top action badges */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 flex flex-col justify-between p-4">
-              <div className="flex justify-between items-start">
-                <span className="text-white/80 font-mono text-[10px] uppercase tracking-wider drop-shadow-sm">
-                  {car.id.slice(0, 8)}
-                </span>
-                <span className="px-2 py-0.5 bg-black/40 backdrop-blur-md rounded text-white text-[10px] font-mono border border-white/10 uppercase">
-                  {type}
-                </span>
-              </div>
-              <div className="flex justify-between items-end">
-                <span className="text-white font-display font-medium text-lg drop-shadow-md truncate max-w-[75%]">
-                  {brand} <span className="font-semibold">{model}</span>
-                </span>
-                <span className="text-white font-mono text-xs font-semibold px-2 py-0.5 bg-slate-900/60 backdrop-blur-sm rounded">
-                  {year}
-                </span>
-              </div>
+            {/* Dark overlay with pure Brand/Model details */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10 flex flex-col justify-end p-4">
+              <span className="text-white font-display font-medium text-lg drop-shadow-md truncate">
+                {brand} <span className="font-semibold">{model}</span>
+              </span>
             </div>
           </div>
         ) : (
@@ -223,7 +202,7 @@ export default function CarCard({ car, serverUrl, onViewDetails }: CarCardProps)
           </p>
         ) : (
           <div className="flex flex-col gap-1">
-            <div className="text-[10px] uppercase tracking-wider font-mono text-slate-400">Database Entry</div>
+            <div className="text-[10px] uppercase tracking-wider font-mono text-slate-400">Showroom Model</div>
             <p className="text-xs italic text-slate-400 font-sans">No description provided for this model.</p>
           </div>
         )}

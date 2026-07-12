@@ -9,9 +9,7 @@ interface AddRecordModalProps {
 export default function AddRecordModal({ onClose, onSubmit }: AddRecordModalProps) {
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
-  const [year, setYear] = useState(new Date().getFullYear());
   const [price, setPrice] = useState("");
-  const [type, setType] = useState("Electric");
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,9 +27,9 @@ export default function AddRecordModal({ onClose, onSubmit }: AddRecordModalProp
     const payload = {
       brand: brand.trim(),
       model: model.trim(),
-      year: Number(year),
+      year: new Date().getFullYear(),
       price: price ? Number(price) : null,
-      type,
+      type: "Showroom",
       description: description.trim()
     };
 
@@ -104,49 +102,18 @@ export default function AddRecordModal({ onClose, onSubmit }: AddRecordModalProp
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500">Year</label>
+          <div className="space-y-1">
+            <label className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500">Price (USD)</label>
+            <div className="relative flex items-center">
+              <span className="absolute left-3 text-slate-400 text-xs font-mono">$</span>
               <input
                 type="number"
-                min="1900"
-                max="2100"
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
-                className="w-full px-3 py-2 bg-slate-50 hover:bg-slate-50/50 focus:bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-mono"
+                placeholder="e.g. 45000"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="w-full pl-7 pr-3 py-2 bg-slate-50 hover:bg-slate-50/50 focus:bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-mono"
               />
             </div>
-            
-            <div className="space-y-1">
-              <label className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500">Price (USD)</label>
-              <div className="relative flex items-center">
-                <span className="absolute left-3 text-slate-400 text-xs font-mono">$</span>
-                <input
-                  type="number"
-                  placeholder="e.g. 45000"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  className="w-full pl-7 pr-3 py-2 bg-slate-50 hover:bg-slate-50/50 focus:bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-mono"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500">Fuel/Powertrain Type</label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 hover:bg-slate-50/50 focus:bg-white border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-sans cursor-pointer"
-            >
-              <option value="Electric">Electric (EV)</option>
-              <option value="Gasoline">Gasoline</option>
-              <option value="Hybrid">Hybrid</option>
-              <option value="Plug-in Hybrid">Plug-in Hybrid (PHEV)</option>
-              <option value="Diesel">Diesel</option>
-              <option value="Hydrogen">Hydrogen</option>
-              <option value="Other">Other</option>
-            </select>
           </div>
 
           <div className="space-y-1">

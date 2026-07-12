@@ -42,9 +42,7 @@ export default function RecordDetails({ car, serverUrl, onClose, onDelete }: Rec
   };
 
   const { brand, model } = getBrandAndModel();
-  const year = car.year || new Date(car.created).getFullYear() || "—";
   const price = car.price ? Number(car.price) : null;
-  const type = car.type || car.category || "—";
   const description = car.description || "";
 
   // Image resolution with robust array and string handling
@@ -162,171 +160,98 @@ export default function RecordDetails({ car, serverUrl, onClose, onDelete }: Rec
           >
             <X size={20} />
           </button>
-        </div>
-
-        {/* Tab switcher */}
-        <div className="flex border-b border-slate-100 bg-slate-50/50">
-          <button
-            onClick={() => setActiveTab("visual")}
-            className={`flex-1 py-3 text-xs font-mono font-medium border-b-2 transition-all cursor-pointer ${
-              activeTab === "visual" 
-                ? "border-slate-900 text-slate-900 bg-white" 
-                : "border-transparent text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            <div className="flex items-center justify-center gap-1.5">
-              <FileText size={14} />
-              <span>Attributes</span>
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab("json")}
-            className={`flex-1 py-3 text-xs font-mono font-medium border-b-2 transition-all cursor-pointer ${
-              activeTab === "json" 
-                ? "border-slate-900 text-slate-900 bg-white" 
-                : "border-transparent text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            <div className="flex items-center justify-center gap-1.5">
-              <Code size={14} />
-              <span>Raw Record JSON</span>
-            </div>
-          </button>
-        </div>
-
-        {/* Dynamic content scrollable area */}
+        </div>        {/* Dynamic content scrollable area (Purely visual customer-facing catalog details) */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {activeTab === "visual" ? (
-            <>
-              {/* Large Image Banner */}
-              {imageUrl ? (
-                <div className="relative w-full h-56 rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
-                  <img 
-                    src={imageUrl} 
-                    alt={`${brand} ${model}`}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="w-full h-36 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center">
-                  <HardDrive size={32} className="text-slate-400 mb-2 stroke-[1.2]" />
-                  <p className="text-xs text-slate-500 font-medium font-sans">No record attachment found</p>
-                  <p className="text-[10px] text-slate-400 font-sans mt-0.5">Upload a file to `image` or `photo` column in Admin UI</p>
-                </div>
-              )}
-
-              {/* Basic structured grid */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-                  <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                    <Calendar size={16} />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-mono text-slate-400 uppercase">Production Year</div>
-                    <div className="text-sm font-sans font-semibold text-slate-900">{year}</div>
-                  </div>
-                </div>
-
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-                  <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                    <DollarSign size={16} />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-mono text-slate-400 uppercase">Estimated Price</div>
-                    <div className="text-sm font-sans font-semibold text-slate-900">
-                      {price !== null ? `$${price.toLocaleString()}` : "Not listed"}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-                  <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
-                    <Tag size={16} />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-mono text-slate-400 uppercase">Engine/Type</div>
-                    <div className="text-sm font-sans font-semibold text-slate-900 uppercase text-xs">{type}</div>
-                  </div>
-                </div>
-
-                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-                  <div className="p-2 bg-rose-50 text-rose-600 rounded-lg">
-                    <Info size={16} />
-                  </div>
-                  <div>
-                    <div className="text-[10px] font-mono text-slate-400 uppercase">Collection Name</div>
-                    <div className="text-sm font-sans font-semibold text-slate-900">{car.collectionName}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description Block */}
-              {description && (
-                <div className="space-y-2">
-                  <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">Model Description</h3>
-                  <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
-                    <p className="text-xs text-slate-600 leading-relaxed font-sans">{description}</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Custom attributes detected in collection */}
-              {customFields.length > 0 && (
-                <div className="space-y-3">
-                  <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">Dynamic Schema Attributes</h3>
-                  <div className="border border-slate-100 rounded-xl overflow-hidden divide-y divide-slate-100 bg-white">
-                    {customFields.map(([key, value]) => {
-                      if (["brand", "model", "year", "price", "type", "description", "image", "photo", "title", "photos", "pic", "imageUrl"].includes(key)) return null;
-                      
-                      const displayVal = typeof value === "object" ? JSON.stringify(value) : String(value);
-                      return (
-                        <div key={key} className="flex justify-between items-center py-3 px-4 text-xs">
-                          <span className="font-mono text-slate-500 font-medium">{key}</span>
-                          <span className="font-sans font-semibold text-slate-800">{displayVal || "—"}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* System Metadata */}
-              <div className="space-y-2">
-                <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">Database Metadata</h3>
-                <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-2 font-mono text-[11px] text-slate-500">
-                  <div className="flex justify-between">
-                    <span>Record UID:</span>
-                    <span className="text-slate-800 font-medium">{car.id}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Collection ID:</span>
-                    <span className="text-slate-800 font-medium">{car.collectionId}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Created Date:</span>
-                    <span className="text-slate-800 font-medium">{new Date(car.created).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Updated Date:</span>
-                    <span className="text-slate-800 font-medium">{new Date(car.updated).toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-            </>
+          {/* Large Image Banner */}
+          {imageUrl ? (
+            <div className="relative w-full h-56 rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+              <img 
+                src={imageUrl} 
+                alt={`${brand} ${model}`}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
           ) : (
-            <div className="space-y-4">
-              <div className="text-xs text-slate-500 font-sans leading-relaxed">
-                Here is the full structured payload returned by your PocketBase database for this record. Any custom fields you add will appear here immediately.
-              </div>
-              <pre className="p-4 bg-slate-900 text-emerald-400 rounded-xl font-mono text-xs overflow-x-auto leading-relaxed shadow-inner max-h-[450px]">
-                {JSON.stringify(car, null, 2)}
-              </pre>
+            <div className="w-full h-36 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center">
+              <HardDrive size={32} className="text-slate-400 mb-2 stroke-[1.2]" />
+              <p className="text-xs text-slate-500 font-medium font-sans">No Image Visual Available</p>
             </div>
           )}
+
+          {/* Prestige Pricing & Status Display */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
+              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                <DollarSign size={16} />
+              </div>
+              <div>
+                <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Estimated Value</div>
+                <div className="text-sm font-sans font-bold text-slate-900">
+                  {price !== null ? `$${price.toLocaleString()}` : "Price Upon Inquiry"}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
+              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+                <Check size={16} />
+              </div>
+              <div>
+                <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Showroom Status</div>
+                <div className="text-sm font-sans font-bold text-slate-900">Exclusive Display</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Description Block */}
+          {description ? (
+            <div className="space-y-2">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">About this masterpiece</h3>
+              <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                <p className="text-xs text-slate-600 leading-relaxed font-sans">{description}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">About this masterpiece</h3>
+              <div className="p-4 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-center">
+                <p className="text-xs text-slate-400 italic font-sans">A highly exclusive model from our private scale collection.</p>
+              </div>
+            </div>
+          )}
+
+          {/* Custom attributes/specifications detected in collection */}
+          {customFields.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">Showroom Specifications</h3>
+              <div className="border border-slate-100 rounded-xl overflow-hidden divide-y divide-slate-100 bg-white">
+                {customFields.map(([key, value]) => {
+                  // Skip standard fields or technical database names
+                  if (["brand", "model", "year", "price", "type", "description", "image", "photo", "title", "photos", "pic", "imageUrl"].includes(key)) return null;
+                  
+                  const displayVal = typeof value === "object" ? JSON.stringify(value) : String(value);
+                  return (
+                    <div key={key} className="flex justify-between items-center py-3 px-4 text-xs">
+                      <span className="font-mono text-slate-500 font-medium capitalize">{key}</span>
+                      <span className="font-sans font-semibold text-slate-800">{displayVal || "—"}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Customer Call to Action Banner */}
+          <div className="p-4 bg-indigo-50/50 border border-indigo-100/60 rounded-xl flex flex-col gap-2">
+            <h4 className="text-xs font-semibold text-indigo-900 font-sans">Interested in this model?</h4>
+            <p className="text-[11px] text-indigo-700/90 leading-relaxed font-sans">
+              Connect with Konrad to inquire about details, purchase scale ratios, or arrange a private consultation.
+            </p>
+          </div>
         </div>
 
         {/* Footer controls */}

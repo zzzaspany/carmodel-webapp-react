@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Database, Search, Grid, List, Plus, RefreshCw, 
-  AlertCircle, CheckCircle2, SlidersHorizontal, Settings, HelpCircle, ArrowRight
+  AlertCircle, CheckCircle2, SlidersHorizontal, Settings, HelpCircle, ArrowRight, Car
 } from "lucide-react";
 import { CarModelRecord, ConnectionStatus } from "./types";
 import SchemaGuide from "./components/SchemaGuide";
@@ -34,7 +34,7 @@ export default function App() {
     }
 
     // Check build-time Vite env var fallback
-    const envUrl = import.meta.env.VITE_POCKETBASE_URL;
+    const envUrl = (import.meta as any).env.VITE_POCKETBASE_URL;
     if (envUrl) {
       if (envUrl.includes("//pocketbase:") || envUrl.includes("//pocketbase/") || envUrl === "http://pocketbase:8090") {
         return window.location.origin + "/pb";
@@ -269,15 +269,15 @@ export default function App() {
           
           {/* Brand Logo */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-600 text-white rounded-xl shadow-sm shadow-indigo-500/20">
-              <Database size={18} strokeWidth={2} />
+            <div className="p-2 bg-slate-900 text-white rounded-xl shadow-sm">
+              <Car size={18} strokeWidth={2} />
             </div>
             <div>
               <h1 className="font-display font-bold text-slate-900 tracking-tight text-base sm:text-lg flex items-center gap-1.5">
-                Car Model Explorer
+                Prestige Showroom
               </h1>
               <p className="text-[10px] text-slate-400 font-mono hidden sm:block">
-                carmodel collection manager
+                curated private collection
               </p>
             </div>
           </div>
@@ -435,24 +435,6 @@ export default function App() {
                 />
               </div>
 
-              {/* Dynamic tag selection filter */}
-              {dynamicTypes.length > 2 && (
-                <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200/60 rounded-xl p-1 shrink-0 overflow-x-auto">
-                  {dynamicTypes.map((type) => (
-                    <button
-                      key={type}
-                      onClick={() => setTypeFilter(type)}
-                      className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-colors cursor-pointer uppercase text-[10px] ${
-                        typeFilter === type 
-                          ? "bg-white text-slate-950 shadow-xs border border-slate-200" 
-                          : "text-slate-500 hover:text-slate-950"
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Right layout settings & Action triggers */}
@@ -467,7 +449,6 @@ export default function App() {
                 >
                   <option value="newest">Newest First</option>
                   <option value="brand-asc">Alphabetical (Brand)</option>
-                  <option value="year-desc">Latest Year</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
                 </select>
