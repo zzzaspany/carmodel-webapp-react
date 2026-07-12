@@ -49,6 +49,20 @@ export default function App() {
     return (localStorage.getItem("pb_view_mode") as "grid" | "table") || "grid";
   });
 
+  // Get contact email from window object (injected in container) or Vite env
+  const contactEmail = useMemo(() => {
+    const winEmail = (window as any).CONTACT_EMAIL;
+    if (winEmail && winEmail !== "__CONTACT_EMAIL__" && winEmail.trim() !== "") {
+      return winEmail.trim();
+    }
+    // Fallback to build-time Vite env var
+    const envEmail = (import.meta as any).env.VITE_CONTACT_EMAIL;
+    if (envEmail && envEmail.trim() !== "") {
+      return envEmail.trim();
+    }
+    return null;
+  }, []);
+
   // Database lists and fetch status
   const [cars, setCars] = useState<CarModelRecord[]>([]);
   const [loading, setLoading] = useState(false);
@@ -263,11 +277,17 @@ export default function App() {
             </div>
             <div>
               <h1 className="font-display font-bold text-slate-900 tracking-tight text-base sm:text-lg flex items-center gap-1.5">
-                Prestige Showroom
+                Private car models collection
               </h1>
-              <p className="text-[10px] text-slate-400 font-mono hidden sm:block">
-                curated private collection
-              </p>
+              {contactEmail ? (
+                <p className="text-[10px] text-indigo-600 font-mono">
+                  Contact: <a href={`mailto:${contactEmail}`} className="hover:underline">{contactEmail}</a>
+                </p>
+              ) : (
+                <p className="text-[10px] text-slate-400 font-mono hidden sm:block">
+                  curated private collection
+                </p>
+              )}
             </div>
           </div>
 
@@ -520,9 +540,16 @@ export default function App() {
       {/* Footer copyright and diagnostics */}
       <footer className="mt-auto bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="font-sans font-medium text-slate-400">
-            PocketBase Car Explorer Utility
-          </p>
+          <div className="text-center sm:text-left">
+            <p className="font-sans font-medium text-slate-500">
+              Private car models collection
+            </p>
+            {contactEmail && (
+              <p className="text-slate-400 mt-1 font-sans">
+                For inquiries, email us at: <a href={`mailto:${contactEmail}`} className="text-indigo-600 hover:underline font-semibold">{contactEmail}</a>
+              </p>
+            )}
+          </div>
           <div className="flex items-center gap-4 font-mono text-[10px]">
             <span>Active URL: <code className="bg-slate-50 px-1.5 py-0.5 border border-slate-100 rounded text-slate-500 font-semibold">{serverUrl}</code></span>
             <span className="hidden sm:inline">Collection: <code className="bg-slate-50 px-1.5 py-0.5 border border-slate-100 rounded text-slate-500 font-semibold">carmodel</code></span>

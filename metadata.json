@@ -1,5 +1,5 @@
 {
-  "name": "Car Model Explorer",
+  "name": "Private car models collection",
   "description": "A prestige digital showroom and catalog for prospective customers to explore our curated car model collection.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
