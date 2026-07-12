@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Trash2, Calendar, HardDrive, DollarSign, Tag, Info, Code, FileText, Check } from "lucide-react";
+import { X, Trash2, Calendar, HardDrive, Coins, Tag, Info, Code, FileText, Check } from "lucide-react";
 import { CarModelRecord } from "../types";
 
 interface RecordDetailsProps {
@@ -186,12 +186,12 @@ export default function RecordDetails({ car, serverUrl, onClose, onDelete }: Rec
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
               <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                <DollarSign size={16} />
+                <Coins size={16} />
               </div>
               <div>
-                <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Estimated Value</div>
+                <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Price</div>
                 <div className="text-sm font-sans font-bold text-slate-900">
-                  {price !== null ? `$${price.toLocaleString()}` : "Price Upon Inquiry"}
+                  {price !== null ? `${price.toLocaleString()} PLN` : "Price Upon Inquiry"}
                 </div>
               </div>
             </div>

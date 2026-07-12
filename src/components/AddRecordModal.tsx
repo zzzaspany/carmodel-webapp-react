@@ -103,16 +103,16 @@ export default function AddRecordModal({ onClose, onSubmit }: AddRecordModalProp
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500">Price (USD)</label>
+            <label className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500">Price (PLN)</label>
             <div className="relative flex items-center">
-              <span className="absolute left-3 text-slate-400 text-xs font-mono">$</span>
               <input
                 type="number"
-                placeholder="e.g. 45000"
+                placeholder="e.g. 180000"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full pl-7 pr-3 py-2 bg-slate-50 hover:bg-slate-50/50 focus:bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-mono"
+                className="w-full pl-3 pr-12 py-2 bg-slate-50 hover:bg-slate-50/50 focus:bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-mono"
               />
+              <span className="absolute right-3 text-slate-400 text-xs font-mono">PLN</span>
             </div>
           </div>
 

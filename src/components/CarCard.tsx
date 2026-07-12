@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { Car, Fuel, Calendar, DollarSign, ArrowUpRight, ShieldCheck, Cpu } from "lucide-react";
+import { Car, Fuel, Calendar, Coins, ArrowUpRight, ShieldCheck, Cpu } from "lucide-react";
 import { CarModelRecord } from "../types";
 
 interface CarCardProps {
@@ -211,9 +211,9 @@ export default function CarCard({ car, serverUrl, onViewDetails }: CarCardProps)
           <div className="flex items-center gap-1.5 text-slate-700">
             {price !== null ? (
               <>
-                <DollarSign size={14} className="text-slate-400" />
+                <Coins size={14} className="text-slate-400" />
                 <span className="font-mono text-sm font-semibold tracking-tight text-slate-900">
-                  {price.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  {price.toLocaleString(undefined, { maximumFractionDigits: 0 })} PLN
                 </span>
               </>
             ) : (

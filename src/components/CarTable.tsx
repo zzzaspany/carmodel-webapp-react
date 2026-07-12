@@ -1,5 +1,5 @@
 import React from "react";
-import { Eye, DollarSign, Calendar, Tag, HardDrive } from "lucide-react";
+import { Eye, Coins, Calendar, Tag, HardDrive } from "lucide-react";
 import { CarModelRecord } from "../types";
 
 interface CarTableProps {
@@ -167,7 +167,7 @@ export default function CarTable({ cars, serverUrl, onViewDetails }: CarTablePro
                   </td>
                   <td className="py-3 px-5 text-right font-mono text-sm font-semibold text-slate-900">
                     {price !== null ? (
-                      `$${price.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+                      `${price.toLocaleString(undefined, { maximumFractionDigits: 0 })} PLN`
                     ) : (
                       <span className="text-slate-400 font-sans text-xs font-normal">No price listed</span>
                     )}
