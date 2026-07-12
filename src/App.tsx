@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Database, Search, Grid, List, Plus, RefreshCw, 
-  AlertCircle, CheckCircle2, SlidersHorizontal, Settings, HelpCircle, ArrowRight, Car
+  AlertCircle, CheckCircle2, SlidersHorizontal, HelpCircle, ArrowRight, Car
 } from "lucide-react";
 import { CarModelRecord, ConnectionStatus } from "./types";
 import SchemaGuide from "./components/SchemaGuide";
@@ -55,8 +55,6 @@ export default function App() {
   const [fetchError, setFetchError] = useState<string | null>(null);
   
   // Connection and admin settings
-  const [showSettings, setShowSettings] = useState(false);
-  const [tempUrl, setTempUrl] = useState(serverUrl);
   const [connection, setConnection] = useState<ConnectionStatus>({
     connected: false,
     checking: true,
@@ -196,16 +194,7 @@ export default function App() {
     }
   };
 
-  // Save custom server URL input
-  const handleSaveSettings = (e: React.FormEvent) => {
-    e.preventDefault();
-    let url = tempUrl.trim();
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = `http://${url}`;
-    }
-    setServerUrl(url);
-    setShowSettings(false);
-  };
+
 
   // Extract list of all unique motorization types in collection for filtering
   const dynamicTypes = useMemo(() => {
@@ -304,20 +293,6 @@ export default function App() {
               )}
             </div>
 
-            {/* Config details button */}
-            <button
-              onClick={() => {
-                setTempUrl(serverUrl);
-                setShowSettings(!showSettings);
-              }}
-              className={`p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer ${
-                showSettings ? "bg-slate-50 ring-2 ring-indigo-500/10 border-indigo-200 text-indigo-700" : "bg-white"
-              }`}
-              title="PocketBase Connection Settings"
-            >
-              <Settings size={16} />
-            </button>
-
             {/* Refresh list */}
             <button
               disabled={loading}
@@ -332,50 +307,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Slide-out settings drawer (Inline header) */}
-        <AnimatePresence>
-          {showSettings && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="border-t border-slate-100 bg-slate-50/50 overflow-hidden"
-            >
-              <div className="max-w-4xl mx-auto p-4 sm:px-6 lg:px-8">
-                <form onSubmit={handleSaveSettings} className="flex flex-col sm:flex-row gap-3 items-end">
-                  <div className="w-full space-y-1.5 flex-1">
-                    <label className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                      Local PocketBase Instance Endpoint
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="http://localhost:8090"
-                      value={tempUrl}
-                      onChange={(e) => setTempUrl(e.target.value)}
-                      className="w-full px-3.5 py-2 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 rounded-xl text-sm font-mono text-slate-800"
-                    />
-                  </div>
-                  <div className="flex gap-2 w-full sm:w-auto">
-                    <button
-                      type="button"
-                      onClick={() => setShowSettings(false)}
-                      className="flex-1 sm:flex-initial px-4 py-2 text-slate-500 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="flex-1 sm:flex-initial px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-sm cursor-pointer"
-                    >
-                      Connect URL
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       {/* Main page content area */}
@@ -398,15 +329,6 @@ export default function App() {
               </div>
             </div>
             <div className="flex gap-2 w-full sm:w-auto self-end sm:self-center">
-              <button
-                onClick={() => {
-                  setTempUrl(serverUrl);
-                  setShowSettings(true);
-                }}
-                className="flex-1 sm:flex-initial px-3.5 py-1.5 bg-white border border-rose-200 hover:bg-rose-100/50 text-rose-800 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
-              >
-                Change Address
-              </button>
               <button
                 onClick={fetchRecords}
                 className="flex-1 sm:flex-initial px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer"
