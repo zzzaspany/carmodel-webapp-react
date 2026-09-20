@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve the application using Nginx
-FROM nginx:1.25-alpine
+FROM nginx:stable-alpine
 
 # Copy built static files
 COPY --from=build /app/dist /usr/share/nginx/html
