@@ -6,6 +6,11 @@ on:
       - main
     tags:
       - 'v*'
+  # Build on PRs too, so a broken build is caught before it reaches main.
+  # Nothing is pushed to the registry from a PR - see the push: setting below.
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 env:
@@ -44,6 +49,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
