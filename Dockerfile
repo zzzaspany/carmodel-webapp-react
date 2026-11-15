@@ -30,6 +30,26 @@ COPY --chown=101:101 nginx.conf /etc/nginx/conf.d/default.conf
 # directories need to be writable by the runtime user, not just the files inside them. The base
 # image already runs as 101, so this has to step up to root and back down again.
 USER root
+
+# Upgrade the runtime layer's OS packages before dropping back to 101.
+#
+# The base image lags Alpine's own repository. As of 2026-11-15 every nginx-unprivileged
+# alpine tag - `stable-alpine`, `mainline-alpine` and plain `alpine` - still ships
+# brotli-libs 1.2.0-r1, while Alpine has 1.2.1-r0, which fixes CVE-2026-111497: an
+# out-of-bounds write in the Brotli decoder, rated CRITICAL and reachable by anything that
+# sends a brotli-encoded request body.
+#
+# Rebuilding alone does not clear it. v0.5.1 was exactly that - a rebuild of the same commit
+# as v0.5.0, nothing else - and it dropped HIGH findings from 20 to 12 while leaving the
+# CRITICAL untouched, because the package is as stale in the fresh base as in the old one.
+# There is no newer tag to move to; all three were scanned.
+#
+# Upgrading the whole layer rather than naming brotli-libs is deliberate: it makes the next
+# instance of this self-healing instead of needing another commit. nginx itself comes from
+# nginx.org's own apk repository pinned in the base image, so this does not swap the server
+# out from under the config.
+RUN apk --no-cache upgrade
+
 RUN chown -R 101:101 /usr/share/nginx/html /etc/nginx/conf.d
 USER 101
 
